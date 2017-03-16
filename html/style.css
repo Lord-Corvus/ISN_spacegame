@@ -1,0 +1,17 @@
+@font-face {
+	font-family: keys;
+	src: url('data/keys.otf');
+}
+
+@font-face {
+	font-family: orange_juice;
+	src: url('data/orange_juice.ttf');
+}
+
+#titre{
+	font: 40px keys;
+}
+
+body{
+	font : 20px orange_juice;
+}
