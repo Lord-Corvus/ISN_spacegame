@@ -1,21 +1,20 @@
-PImage spaceship, cursor, background, laser_shot;
-int playerX, playerY;
-float playerXSpeed, playerYSpeed;
+PImage spaceship, cursor, background, lasershot;
+final float player[]=new float[4];  // PlayerX, PlayerY, PlayerXSpeed and PlayerYSpeed
 
 void setup() {
-  frameRate(100);
-  noCursor();
+  frameRate(100);  // 100 FPS
+  noCursor();  // Hidding OS's cursor
   //fullScreen();  //  For playing
   size(600, 600);  //  For debuging ;-)
 
   spaceship=loadImage("spaceship.png");  //  35x31 px
   cursor=loadImage("cursor.png");  //  10x10 px
-  laser_shot=loadImage("laser_shot.png");  //  10x2 px
+  lasershot=loadImage("lasershot.png");  //  10x2 px
   background=loadImage("background.jpg");
-  playerX=int(random(35/2, width-35/2));
-  playerY=int(random(35/2, height-35/2));
-  playerXSpeed=0;
-  playerYSpeed=0;
+  player[0]=random(35/2, width-35/2);  // Player's X-Posistion
+  player[1]=random(35/2, height-35/2);  // Player's Y-Posistion
+  player[2]=random(-0.5, 0.5);  // Player's X-Speed
+  player[3]=random(-0.5, 0.5);  // Player's Y-Speed
 }
 
 void draw() {
@@ -32,7 +31,7 @@ void keyPressed() {
 
 void mousePressed() {
   if (mouseButton==RIGHT) {
-    println("LASER_SHOT");
+    LaserShot();
   }
 }
 
@@ -46,31 +45,31 @@ void Spaceship() {
     PlayerMove();
   }
 
-  playerX+=round(playerXSpeed);
-  playerY+=round(playerYSpeed);
+  player[0]+=player[2];
+  player[1]+=player[3];
 
   // Correct the spaceship's position (don't go off screen)
-  if (playerX>width-35/2) {
-    playerX=width-35/2;
-    playerXSpeed=0;
-  } else if (playerX<35/2) {
-    playerX=35/2;
-    playerXSpeed=0;
+  if (player[0]>width-35/2) {
+    player[0]=width-35/2;
+    player[2]=0;
+  } else if (player[0]<35/2) {
+    player[0]=35/2;
+    player[2]=0;
   }
-  if (playerY>height-35/2) {
-    playerY=height-35/2;
-    playerYSpeed=0;
-  } else if (playerY<35/2) {
-    playerY=35/2;
-    playerYSpeed=0;
+  if (player[1]>height-35/2) {
+    player[1]=height-35/2;
+    player[3]=0;
+  } else if (player[1]<35/2) {
+    player[1]=35/2;
+    player[3]=0;
   }
 
   // Distance between scpaceship and cursor
-  float distance=sqrt(pow(playerX-mouseX, 2)+pow(playerY-mouseY, 2));
+  float distance=sqrt(pow(player[0]-mouseX, 2)+pow(player[1]-mouseY, 2));
 
   // Angle
-  float angle=acos((mouseX-playerX)/distance);
-  if (mouseY<=playerY) {
+  float angle=acos((mouseX-player[0])/distance);
+  if (mouseY<=player[1]) {
     angle=-angle;
   }
   if (distance<=0) {
@@ -79,14 +78,18 @@ void Spaceship() {
 
   // Display rotated spaceship
   pushMatrix();
-  translate(playerX, playerY);
+  translate(player[0], player[1]);
   rotate(angle);
   image(spaceship, 0-31/2, 0-35/2);
   popMatrix();
 }
 
 void PlayerMove() {
-  float distance=sqrt(pow(playerX-mouseX, 2)+pow(playerY-mouseY, 2));
-  playerXSpeed+=0.1*(mouseX-playerX)/distance;  //  playerXSpeed+=cos(angle)
-  playerYSpeed+=0.1*(mouseY-playerY)/distance;  //  playerXSpeed+=sin(angle)
+  float distance=sqrt(pow(player[0]-mouseX, 2)+pow(player[1]-mouseY, 2));
+  player[2]+=0.05*(mouseX-player[0])/distance;  //  playerXSpeed+=cos(angle)
+  player[3]+=0.05*(mouseY-player[1])/distance;  //  playerXSpeed+=sin(angle)
+}
+
+void LaserShot() {
+  println("LASER_SHOT");
 }
