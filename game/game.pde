@@ -6,19 +6,26 @@ void setup() {
   noCursor();  // Hidding OS's cursor
   //fullScreen();  //  For playing
   size(600, 600);  //  For debuging ;-)
+  background(0);
 
-  spaceship=loadImage("spaceship.png");  //  35x31 px
-  cursor=loadImage("cursor.png");  //  10x10 px
-  lasershot=loadImage("lasershot.png");  //  10x2 px
-  background=loadImage("background.jpg");
-  player[0]=random(35/2, width-35/2);  // Player's X-Posistion
-  player[1]=random(35/2, height-35/2);  // Player's Y-Posistion
+  spaceship=requestImage("spaceship.png");  //  35x31 px
+  cursor=requestImage("cursor.png");  //  10x10 px
+  lasershot=requestImage("lasershot.png");  //  10x2 px
+  background=requestImage("background.jpg");
+  player[0]=random(spaceship.width/2, width-spaceship.width/2);  // Player's X-Posistion
+  player[1]=random(spaceship.width/2, height-spaceship.width/2);  // Player's Y-Posistion
   player[2]=random(-0.5, 0.5);  // Player's X-Speed
   player[3]=random(-0.5, 0.5);  // Player's Y-Speed
 }
 
 void draw() {
-  image(background, 0, 0);
+  if (background.width!=0) {
+    imageMode(CENTER);
+    image(background, width/2, height/2);
+    imageMode(CORNER);
+  } else {
+    background(0);
+  }
   Spaceship();
   Cursor();
 }
@@ -36,7 +43,7 @@ void mousePressed() {
 }
 
 void Cursor() {
-  image(cursor, mouseX-5, mouseY-5);
+  image(cursor, mouseX-cursor.width, mouseY-cursor.height);
 }
 
 void Spaceship() {
@@ -49,18 +56,18 @@ void Spaceship() {
   player[1]+=player[3];
 
   // Correct the spaceship's position (don't go off screen)
-  if (player[0]>width-35/2) {
-    player[0]=width-35/2;
+  if (player[0]>width-spaceship.width/2) {
+    player[0]=width-spaceship.width/2;
     player[2]=0;
-  } else if (player[0]<35/2) {
-    player[0]=35/2;
+  } else if (player[0]<spaceship.width/2) {
+    player[0]=spaceship.width/2;
     player[2]=0;
   }
-  if (player[1]>height-35/2) {
-    player[1]=height-35/2;
+  if (player[1]>height-spaceship.width/2) {
+    player[1]=height-spaceship.width/2;
     player[3]=0;
-  } else if (player[1]<35/2) {
-    player[1]=35/2;
+  } else if (player[1]<spaceship.width/2) {
+    player[1]=spaceship.width/2;
     player[3]=0;
   }
 
@@ -80,7 +87,7 @@ void Spaceship() {
   pushMatrix();
   translate(player[0], player[1]);
   rotate(angle);
-  image(spaceship, 0-31/2, 0-35/2);
+  image(spaceship, 0-31/2, 0-spaceship.width/2);
   popMatrix();
 }
 
